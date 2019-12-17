@@ -13,8 +13,9 @@ static string custom_palette;
 static int theme_mode = 0;
 static int conv_deftab = 0;
 static int autofxmode = 0;
+static int reloadmode = 0;
 static bool custom_whiteicons;
-static bool autofx;
+static bool autofx = true;
 static bool muteOnRestart;
 static bool glava_fix;
 static bool settingsdlg_enabled=true;
@@ -49,11 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     path = result;
     appcpath = result2;
 
-
     loadAppConfig();
     conf->setConfigMap(ConfigIO::readFile(QString::fromStdString(path)));
     loadConfig();
-
 
     QMenu *menu = new QMenu();
     menu->addAction("Reload Viper", this,SLOT(Restart()));
@@ -76,19 +75,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->colmpreset->setMenu(menuC);
     SetStyle();
     ConnectActions();
-
-    //extract stormviper presets
-    QFileInfo audioconf(QString::fromStdString(path));
-    QDir(audioconf.absolutePath()+QDir::separator()+"stormviper").removeRecursively();
-    QDir configdir(audioconf.absolutePath());
-    configdir.mkpath("stormviper");
-    QString cdir = configdir.absolutePath() + QDir::separator() + "stormviper" + QDir::separator();
-    QFile(":/assets/Stormviper PBone Edition/Stormviper Viper4Linux Pbone.txt").copy(cdir + "Stormviper Viper4Linux Pbone.txt");
-    QFile(":/assets/Stormviper PBone Edition/Stormviper Cinematic.conf").copy(cdir + "Stormviper Cinematic.conf");
-    QFile(":/assets/Stormviper PBone Edition/Stormviper Music.conf").copy(cdir + "Stormviper Music.conf");
-    QFile(":/assets/Stormviper PBone Edition/Stormviper Stage.conf").copy(cdir + "Stormviper Stage.conf");
-    QFile(":/assets/Stormviper PBone Edition/Stormviper Unity.irs").copy(cdir + "Stormviper Unity.irs");
-
 }
 
 MainWindow::~MainWindow()
@@ -403,7 +389,7 @@ void MainWindow::OnRelease(){
         ConfirmConf();
     }
 }
-void MainWindow::ConfirmConf(bool restart){
+void MainWindow::ConfirmConf(bool restart,bool ignoreReloadMethod){
     conf->setValue("fx_enable",QVariant(!ui->disableFX->isChecked()));
     conf->setValue("tube_enable",QVariant(ui->tubesim->isChecked()));
     conf->setValue("colm_enable",QVariant(ui->colm->isChecked()));
@@ -477,7 +463,7 @@ void MainWindow::ConfirmConf(bool restart){
 
     ConfigIO::writeFile(QString::fromStdString(path),conf->getConfigMap());
 
-    if(restart)Restart();
+    if((restart&&reloadmode==1)||(restart&&ignoreReloadMethod))Restart();
 }
 void MainWindow::Reset(){
     QMessageBox::StandardButton reply;
@@ -493,7 +479,7 @@ void MainWindow::Reset(){
         conf->setConfigMap(ConfigIO::readFile(QString::fromStdString(path)));
         loadConfig();
 
-        ConfirmConf();
+        ConfirmConf(true,true);
     }
 }
 void MainWindow::Restart(){
@@ -520,7 +506,7 @@ void MainWindow::LoadPresetFile(const QString& filename){
     conf->setConfigMap(ConfigIO::readFile(QString::fromStdString(path)));
     loadConfig();
 
-    ConfirmConf();
+    ConfirmConf(true,true);
 }
 void MainWindow::SavePresetFile(const QString& filename){
     const QString src = QString::fromStdString(path);
@@ -542,7 +528,7 @@ void MainWindow::LoadExternalFile(){
     conf->setConfigMap(ConfigIO::readFile(QString::fromStdString(path)));
     loadConfig();
 
-    ConfirmConf();
+    ConfirmConf(true,true);
 }
 void MainWindow::SaveExternalFile(){
     QString filename = QFileDialog::getSaveFileName(this,"Save current audio.conf","","*.conf");
@@ -565,7 +551,7 @@ void MainWindow::loadAppConfig(bool once){
     appconf->setConfigMap(ConfigIO::readFile(QString::fromStdString(appcpath),false));
     std::string p = chopFirstLastChar(appconf->getString("configpath")).toUtf8().constData();
     std::string i = chopFirstLastChar(appconf->getString("irspath")).toUtf8().constData();
-    autofx = appconf->getBool("autoapply");
+    //autofx = appconf->getBool("autoapply"); <---- Deprecated
     autofxmode = appconf->getInt("autoapplymode");
     path = (p.length() < 1) ? path : p;
     irs_path = (i.length() < 1) ? irs_path : i;
@@ -578,11 +564,12 @@ void MainWindow::loadAppConfig(bool once){
     custom_palette = appconf->getString("custompalette").toUtf8().constData();
     muteOnRestart = appconf->getBool("muteOnRestart");
     theme_str = appconf->getBool("theme");
+    reloadmode = appconf->getInt("reloadmethod");
 }
 
 //---UI Config Generator
 void MainWindow::saveAppConfig(){
-    appconf->setValue("autoapply",QVariant(autofx));
+    //appconf->setValue("autoapply",QVariant(autofx)); <---- Deprecated
     appconf->setValue("autoapplymode",QVariant(autofxmode));
     appconf->setValue("configpath",QVariant("\"" + QString::fromStdString(path) + "\""));
     appconf->setValue("irspath",QVariant("\"" + QString::fromStdString(irs_path) + "\""));
@@ -595,6 +582,7 @@ void MainWindow::saveAppConfig(){
     appconf->setValue("theme",QVariant(QString::fromStdString(theme_str)));
     appconf->setValue("customwhiteicons",QVariant(custom_whiteicons));
     appconf->setValue("convolver_defaulttab",QVariant(conv_deftab));
+    appconf->setValue("reloadmethod",QVariant(reloadmode));
     ConfigIO::writeFile(QString::fromStdString(appcpath),appconf->getConfigMap());
 }
 
@@ -1157,11 +1145,13 @@ void MainWindow::updateWidgetUnit(QObject* sender,QString text,bool viasignal){
 
 //---Getter/Setter
 bool MainWindow::getAutoFx(){
+    //This is stubbed. Do not use
     return autofx;
 }
 void MainWindow::setAutoFx(bool afx){
-    autofx = afx;
-    saveAppConfig();
+    //This is stubbed. Do not use
+    //autofx = afx;
+    //saveAppConfig();
 }
 bool MainWindow::getMuteOnRestart(){
     return muteOnRestart;
@@ -1175,7 +1165,7 @@ void MainWindow::setIRS(const string& irs,bool apply){
     QFileInfo irsInfo(QString::fromStdString(irs));
     ui->convpath->setText(irsInfo.baseName());
     ui->convpath->setCursorPosition(0);
-    if(apply)ConfirmConf();
+    if(apply)ConfirmConf(true,true);
 }
 void MainWindow::setGFix(bool f){
     glava_fix = f;
@@ -1263,7 +1253,16 @@ void MainWindow::setTheme(string thm){
 string MainWindow::getTheme(){
     return theme_str;
 }
-
+int MainWindow::getReloadMethod(){
+    return reloadmode;
+}
+void MainWindow::setReloadMethod(int mode){
+    //Modes:
+    //  0 - Synchronize
+    //  1 - Force reload
+    reloadmode = mode;
+    saveAppConfig();
+}
 string MainWindow::getIrsPath(){
     if(irs_path.empty()){
         struct passwd *pw = getpwuid(getuid());

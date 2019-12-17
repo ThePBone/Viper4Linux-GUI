@@ -134,6 +134,14 @@ settings::settings(QWidget *parent) :
 
     ui->deftab_favorite->setChecked(!conv_deftab);
     ui->deftab_filesys->setChecked(conv_deftab);
+
+    ui->reloadMethod->setCurrentIndex(mainwin->getReloadMethod());
+
+    connect(ui->reloadMethod, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this](int id) {
+        if(lockslot)return;
+        mainwin->setReloadMethod(id);
+    });
+
     lockslot = false;
 }
 settings::~settings(){

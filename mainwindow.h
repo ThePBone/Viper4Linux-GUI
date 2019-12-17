@@ -52,6 +52,8 @@ public:
     Ui::MainWindow *ui;
     void writeLogF(const QString&,const QString&);
     void writeLog(const QString&,int mode = 0);
+    int getReloadMethod();
+    void setReloadMethod(int mode);
     void setConv_DefTab(int mode);
     int getConv_DefTab();
     void setIrsPath(string npath);
@@ -96,7 +98,7 @@ public slots:
     void Reset();
     void Restart();
     void updatecolmpreset();
-    void ConfirmConf(bool restart=true);
+    void ConfirmConf(bool restart=true,bool ignoreReloadMethod=false);
 private slots:
     void DisableFX();
     void OpenPreset();
