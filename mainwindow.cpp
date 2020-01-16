@@ -378,6 +378,7 @@ void MainWindow::EqPresetSelectionUpdated(){
 }
 void MainWindow::DynsysPresetSelectionUpdated(){
     const int* data = EQ::lookupDynsysPreset(ui->dynsys_preset->currentText());
+    if(data==nullptr)return;
     lockapply=true;
     ui->dyn_xcoeff1->setValue(data[0]);
     ui->dyn_xcoeff2->setValue(data[1]);
