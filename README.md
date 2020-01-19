@@ -1,5 +1,5 @@
 # Viper4Linux-GUI
-[![Build Status](https://travis-ci.org/ThePBone/Viper4Linux-GUI.svg?branch=master)](https://travis-ci.org/ThePBone/Viper4Linux-GUI) ![GitHub](https://img.shields.io/github/license/ThePBone/Viper4Linux-GUI) ![Codacy branch grade](https://img.shields.io/codacy/grade/cb83ce5a7deb4130bd4b918d9e19a925/master) ![GitHub release](https://img.shields.io/github/release/ThePBone/Viper4Linux-GUI)
+[![Build Status](https://travis-ci.org/ThePBone/Viper4Linux-GUI.svg?branch=master)](https://travis-ci.org/ThePBone/Viper4Linux-GUI-Legacy) ![GitHub](https://img.shields.io/github/license/ThePBone/Viper4Linux-GUI) ![Codacy branch grade](https://img.shields.io/codacy/grade/cb83ce5a7deb4130bd4b918d9e19a925/master) ![GitHub release](https://img.shields.io/github/release/ThePBone/Viper4Linux-GUI)
 
 Official UI for Viper4Linux [https://github.com/noahbliss/Viper4Linux](https://github.com/noahbliss/Viper4Linux)
 * Telegram: @ThePBone
