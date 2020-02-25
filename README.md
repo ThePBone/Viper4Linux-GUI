@@ -40,6 +40,7 @@ On Arch you also can use the [AUR package](https://aur.archlinux.org/packages/vi
 ```bash
 yay -S viper4linux-gui-git  
 ```
+**Note:** On Arch, I recommend you to use the git package above as it already uses the newer GUI for Viper4Linux2. Check its repo out here: [Audio4Linux/Viper4Linux-GUI](https://github.com/Audio4Linux/Viper4Linux-GUI)
 
 Or [this one](https://aur.archlinux.org/packages/viper4linux-gui) to get the latest stable release:
 ```bash
