@@ -1,10 +1,16 @@
-# Viper4Linux-GUI
+# Viper4Linux-GUI-Legacy
 [![Build Status](https://travis-ci.org/ThePBone/Viper4Linux-GUI-Legacy.svg?branch=master)](https://travis-ci.org/ThePBone/Viper4Linux-GUI-Legacy) ![GitHub](https://img.shields.io/github/license/ThePBone/Viper4Linux-GUI-Legacy) ![Codacy branch grade](https://img.shields.io/codacy/grade/cb83ce5a7deb4130bd4b918d9e19a925/master) ![GitHub release](https://img.shields.io/github/release/ThePBone/Viper4Linux-GUI-Legacy)
 
 Official UI for Viper4Linux [https://github.com/noahbliss/Viper4Linux](https://github.com/noahbliss/Viper4Linux)
 * Telegram: @ThePBone
-* [Stable Builds](https://github.com/ThePBone/Viper4Linux-GUI-Legacy/releases)
-* [Nightly Builds](https://nightly.thebone.cf/viper-gui/?C=M;O=D)
+
+# DEPRECATED - Please use the new GUI for Viper instead: 
+
+### <https://github.com/Audio4Linux/Viper4Linux-GUI>
+
+**It provides support for both legacy Viper and Viper4Linux2**
+
+_______
 
 ## Usage
 ### Features
